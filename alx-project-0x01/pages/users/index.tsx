@@ -1,5 +1,10 @@
-const index = () => {
-  return <div>index</div>;
-};
+export async function getStaticProps() {
+  const response = await fetch('https://jsonplaceholder.typicode.com/users');
+  const posts = await response.json();
 
-export default index;
+  return {
+    props: {
+      posts,
+    },
+  };
+}
