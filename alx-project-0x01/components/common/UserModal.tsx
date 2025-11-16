@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { UserData, UserModalProps } from '@/interfaces';
+import { UserModalProps, UserData } from '@/interfaces';
 
 const UserModal: React.FC<UserModalProps> = ({ isOpen, onClose, onSubmit }) => {
   const [form, setForm] = useState<UserData>({
@@ -12,10 +12,7 @@ const UserModal: React.FC<UserModalProps> = ({ isOpen, onClose, onSubmit }) => {
       suite: '',
       city: '',
       zipcode: '',
-      geo: {
-        lat: '',
-        lng: '',
-      },
+      geo: { lat: '', lng: '' },
     },
     phone: '',
     website: '',
@@ -29,7 +26,23 @@ const UserModal: React.FC<UserModalProps> = ({ isOpen, onClose, onSubmit }) => {
   if (!isOpen) return null;
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setForm({ ...form, [e.target.name]: e.target.value });
+    const { name, value } = e.target;
+
+    if (name.includes('.')) {
+      const keys = name.split('.');
+      setForm((prev) => {
+        const updated = { ...prev };
+        let current: any = updated;
+        keys.slice(0, -1).forEach((k) => {
+          current[k] = { ...current[k] };
+          current = current[k];
+        });
+        current[keys[keys.length - 1]] = value;
+        return updated;
+      });
+    } else {
+      setForm({ ...form, [name]: value });
+    }
   };
 
   return (
@@ -45,7 +58,6 @@ const UserModal: React.FC<UserModalProps> = ({ isOpen, onClose, onSubmit }) => {
             onChange={handleChange}
             className="border p-2 rounded-md"
           />
-
           <input
             name="username"
             placeholder="Username"
@@ -53,7 +65,6 @@ const UserModal: React.FC<UserModalProps> = ({ isOpen, onClose, onSubmit }) => {
             onChange={handleChange}
             className="border p-2 rounded-md"
           />
-
           <input
             name="email"
             placeholder="Email"
@@ -61,7 +72,6 @@ const UserModal: React.FC<UserModalProps> = ({ isOpen, onClose, onSubmit }) => {
             onChange={handleChange}
             className="border p-2 rounded-md"
           />
-
           <input
             name="phone"
             placeholder="Phone"
@@ -69,11 +79,31 @@ const UserModal: React.FC<UserModalProps> = ({ isOpen, onClose, onSubmit }) => {
             onChange={handleChange}
             className="border p-2 rounded-md"
           />
-
           <input
             name="website"
             placeholder="Website"
             value={form.website}
+            onChange={handleChange}
+            className="border p-2 rounded-md"
+          />
+          <input
+            name="company.name"
+            placeholder="Company Name"
+            value={form.company.name}
+            onChange={handleChange}
+            className="border p-2 rounded-md"
+          />
+          <input
+            name="address.street"
+            placeholder="Street"
+            value={form.address.street}
+            onChange={handleChange}
+            className="border p-2 rounded-md"
+          />
+          <input
+            name="address.city"
+            placeholder="City"
+            value={form.address.city}
             onChange={handleChange}
             className="border p-2 rounded-md"
           />
@@ -86,7 +116,6 @@ const UserModal: React.FC<UserModalProps> = ({ isOpen, onClose, onSubmit }) => {
           >
             Cancel
           </button>
-
           <button
             onClick={() => onSubmit(form)}
             className="px-4 py-2 rounded-md bg-blue-600 text-white hover:bg-blue-700"

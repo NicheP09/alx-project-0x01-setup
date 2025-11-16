@@ -1,30 +1,26 @@
+import React from 'react';
 import { UserProps } from '@/interfaces';
 
 const UserCard: React.FC<UserProps> = ({
-  id,
   name,
   username,
   email,
-  address,
   phone,
   website,
   company,
+  address,
 }) => {
   return (
-    <div>
-      <div>{id}</div>
-      <h2>{name}</h2>
-      <p>@{username}</p>
-      <p>{email}</p>
+    <div className="border p-4 rounded-lg shadow-md bg-white dark:bg-neutral-800">
+      <h2 className="text-xl font-bold">{name}</h2>
+      <p className="text-sm text-gray-600">@{username}</p>
+      <p>Email: {email}</p>
+      <p>Phone: {phone}</p>
+      <p>Website: {website}</p>
+      <p>Company: {company.name}</p>
       <p>
-        {address.city}, {address.street}
+        Address: {address.street}, {address.city}
       </p>
-      <p>
-        {address.geo.lat}, {address.geo.lng}
-      </p>
-      <p>{phone}</p>
-      <p>{website}</p>
-      <p>{company.name}</p>
     </div>
   );
 };

@@ -12,9 +12,7 @@ export async function getStaticProps() {
   const posts: UserProps[] = await response.json();
 
   return {
-    props: {
-      posts,
-    },
+    props: { posts },
   };
 }
 
@@ -23,7 +21,8 @@ const Users: React.FC<PageProps> = ({ posts }) => {
   const [openModal, setOpenModal] = useState(false);
 
   const handleAddUser = (data: UserData) => {
-    setUsers([data, ...users]); // add new user at the top
+    const nextId = Math.max(...users.map((u) => u.id)) + 1;
+    setUsers([{ ...data, id: nextId }, ...users]);
     setOpenModal(false);
   };
 
@@ -31,7 +30,6 @@ const Users: React.FC<PageProps> = ({ posts }) => {
     <div className="p-6">
       <h1 className="text-3xl mb-4 font-bold">Users</h1>
 
-      {/* Add User Button */}
       <button
         onClick={() => setOpenModal(true)}
         className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700"
@@ -39,19 +37,23 @@ const Users: React.FC<PageProps> = ({ posts }) => {
         Add User
       </button>
 
-      {/* Modal */}
       <UserModal
         isOpen={openModal}
         onClose={() => setOpenModal(false)}
         onSubmit={handleAddUser}
       />
 
-      {/* User Cards */}
-      <div className="mt-6 grid gap-4">
-        {users.map((user) => (
-          <UserCard key={user.id} {...user} />
-        ))}
-      </div>
+      {users.length === 0 ? (
+        <p className="text-gray-500 mt-6">
+          No users found. Add one to get started!
+        </p>
+      ) : (
+        <div className="mt-6 grid gap-4">
+          {users.map((user) => (
+            <UserCard key={user.id} {...user} />
+          ))}
+        </div>
+      )}
     </div>
   );
 };
