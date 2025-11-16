@@ -16,7 +16,7 @@ export async function getStaticProps() {
   };
 }
 
-const UsersPage: React.FC<PageProps> = ({ posts }) => {
+const Users: React.FC<PageProps> = ({ posts }) => {
   return (
     <div>
       <h1>Users</h1>
@@ -28,4 +28,4 @@ const UsersPage: React.FC<PageProps> = ({ posts }) => {
   );
 };
 
-export default UsersPage;
+export default Users;
